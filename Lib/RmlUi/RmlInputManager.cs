@@ -33,18 +33,18 @@ namespace RmlUi.Lib.RmlUi {
             foreach (var character in textParts) {
                 _ctx.ProcessTextInput(character.ToString());
             }
-            e.Eat = CoreUIPlugin.Instance._rmlSystemInterface?.HasKeyboardFocus == true;
+            e.Eat = RmlUiPlugin.Instance._rmlSystemInterface?.HasKeyboardFocus == true;
         }
 
         private void InputManager_OnKeyUp(object? sender, KeyUpEventArgs e) {
             var eat = !_ctx.ProcessKeyUp(ConvertKey((int)e.Key), GetKeyModifierState());
-            e.Eat = eat || CoreUIPlugin.Instance._rmlSystemInterface?.HasKeyboardFocus == true;
+            e.Eat = eat || RmlUiPlugin.Instance._rmlSystemInterface?.HasKeyboardFocus == true;
         }
 
         private void InputManager_OnKeyDown(object? sender, KeyDownEventArgs e) {
             var eat = !_ctx.ProcessKeyDown(ConvertKey((int)e.Key), GetKeyModifierState());
             var tag = _ctx.GetFocusElement()?.TagName;
-            e.Eat = eat || CoreUIPlugin.Instance._rmlSystemInterface?.HasKeyboardFocus == true;
+            e.Eat = eat || RmlUiPlugin.Instance._rmlSystemInterface?.HasKeyboardFocus == true;
         }
 
         private void InputManager_OnMouseUp(object? sender, MouseUpEventArgs e) {
@@ -82,9 +82,9 @@ namespace RmlUi.Lib.RmlUi {
         private bool IsGhostPanel() {
             if (_ctx.IsMouseInteracting) {
                 try {
-                    var doc = CoreUIPlugin.RmlContext?.GetHoverElement()?.OwnerDocument;
+                    var doc = RmlUiPlugin.RmlContext?.GetHoverElement()?.OwnerDocument;
                     if (doc is not null) {
-                        var panel = CoreUIPlugin.Instance?.PanelManager.GetPanelByPtr(doc.NativePtr);
+                        var panel = RmlUiPlugin.Instance?.PanelManager.GetPanelByPtr(doc.NativePtr);
                         if (panel?.IsGhost == true) {
                             return true;
                         }

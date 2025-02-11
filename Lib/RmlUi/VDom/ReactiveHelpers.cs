@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using static Core.UI.Lib.RmlUi.Elements.ScriptableDocumentElement;
+using static RmlUi.Lib.RmlUi.Elements.ScriptableDocumentElement;
 
 namespace RmlUi.Lib.RmlUi.VDom {
     public class ReactiveHelpers {
@@ -29,13 +29,13 @@ namespace RmlUi.Lib.RmlUi.VDom {
 
         internal void CreateNode(Func<VirtualNode> nodeCreator, VirtualNode? parent = null) {
             SharedState.Reaction(r => {
-                CoreUIPlugin.Log.LogDebug($"Start CreateNode Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
+                RmlUiPlugin.Log.LogDebug($"Start CreateNode Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
                 var node = nodeCreator();
-                CoreUIPlugin.Log.LogDebug($"End CreateNode Expression[{r.Name}:{node}]: {r.Observing.Count}, {r.NewObserving.Count}");
+                RmlUiPlugin.Log.LogDebug($"End CreateNode Expression[{r.Name}:{node}]: {r.Observing.Count}, {r.NewObserving.Count}");
                 return node;
             },
             (node, r) => {
-                CoreUIPlugin.Log.LogDebug($"\t Start CreateNode Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
+                RmlUiPlugin.Log.LogDebug($"\t Start CreateNode Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
                 if (parent is not null) {
                     node.Parent = parent;
                     parent.Children.Add(node);
@@ -43,7 +43,7 @@ namespace RmlUi.Lib.RmlUi.VDom {
                 foreach (var child in node.ChildrenBuilder) {
                     CreateNode(child, node);
                 }
-                CoreUIPlugin.Log.LogDebug($"\t End CreateNode Expression[{r.Name}:{node}]: {r.Observing.Count}, {r.NewObserving.Count}");
+                RmlUiPlugin.Log.LogDebug($"\t End CreateNode Expression[{r.Name}:{node}]: {r.Observing.Count}, {r.NewObserving.Count}");
             }, new ReactionOptions<VirtualNode>() { FireImmediately = true });
         }
 
@@ -51,10 +51,10 @@ namespace RmlUi.Lib.RmlUi.VDom {
             var firstRun = true;
             _r = SharedState.Autorun((r) => {
                 _reaction = r;
-                CoreUIPlugin.Log.LogDebug($"Start WatchAndMount Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
+                RmlUiPlugin.Log.LogDebug($"Start WatchAndMount Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
                 var node = virtualNode()();
                 // now here it would be bnice to be able to call WatchAndMount for each child and get those observables,
-                CoreUIPlugin.Log.LogDebug($"End WatchAndMoun Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
+                RmlUiPlugin.Log.LogDebug($"End WatchAndMoun Expression[{r.Name}]: {r.Observing.Count}, {r.NewObserving.Count}");
 
                 if (firstRun) {
                     node.UpdateElement(el);

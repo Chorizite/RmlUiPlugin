@@ -94,7 +94,7 @@ namespace RmlUi.Lib.RmlUi.VDom {
                 return;
             }
             if (Element is null) {
-                CoreUIPlugin.Log.LogWarning($"Element is null, skipping prop update on {ToString()}: {key}={value}");
+                RmlUiPlugin.Log.LogWarning($"Element is null, skipping prop update on {ToString()}: {key}={value}");
                 return;
             }
 
@@ -123,14 +123,14 @@ namespace RmlUi.Lib.RmlUi.VDom {
                 if (value is LuaFunction action) {
                     Element.SetEventListener(evtName.ToLower(), (e) => {
                         try {
-                            UIDocument? doc = CoreUIPlugin.Instance.PanelManager.GetPanelByPtr(_docEl.OwnerDocument.NativePtr);
+                            UIDocument? doc = RmlUiPlugin.Instance.PanelManager.GetPanelByPtr(_docEl.OwnerDocument.NativePtr);
                             if (doc is null) {
-                                if (_docEl.OwnerDocument.NativePtr == CoreUIPlugin.Instance.PanelManager.GetScreen()?.NativePtr) {
-                                    doc = CoreUIPlugin.Instance.PanelManager.GetScreen();
+                                if (_docEl.OwnerDocument.NativePtr == RmlUiPlugin.Instance.PanelManager.GetScreen()?.NativePtr) {
+                                    doc = RmlUiPlugin.Instance.PanelManager.GetScreen();
                                 }
 
                                 if (doc is null) {
-                                    CoreUIPlugin.Log.LogWarning($"Document is null, skipping event handler on {ToString()}: {key}={value}");
+                                    RmlUiPlugin.Log.LogWarning($"Document is null, skipping event handler on {ToString()}: {key}={value}");
                                     return;
                                 }
                             }
@@ -162,7 +162,7 @@ namespace RmlUi.Lib.RmlUi.VDom {
                             action.Call(evtTable);
                         }
                         catch (Exception ex) {
-                            CoreUIPlugin.Log.LogError(ex, "Error calling event handler");
+                            RmlUiPlugin.Log.LogError(ex, "Error calling event handler");
                         }
                     });
                 }

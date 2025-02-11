@@ -1,5 +1,4 @@
-﻿using ACUI.Lib.RmlUi;
-using RmlUi.Lib;
+﻿using RmlUi.Lib;
 using Microsoft.Extensions.Logging;
 using RmlUiNet;
 using System;
@@ -8,8 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RmlUi.Lib.RmlUi;
 
-namespace ACUI.Lib {
+namespace RmlUi.Lib {
     /// <summary>
     /// Represents a panel in the UI. Multiple panels can be loaded and displayed at the same time.
     /// </summary>
@@ -41,7 +41,7 @@ namespace ACUI.Lib {
         public override void Dispose() {
             if (!_isDisposed) {
                 _isDisposed = true;
-                Core.UI.CoreUIPlugin.Instance.PanelManager.DestroyPanel(Name);
+                RmlUiPlugin.Instance.PanelManager.DestroyPanel(Name);
                 base.Dispose();
             }
         }

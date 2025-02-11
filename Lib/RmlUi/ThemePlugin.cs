@@ -1,5 +1,4 @@
-﻿using ACUI.Lib;
-using Chorizite.Core.Backend;
+﻿using Chorizite.Core.Backend;
 using Chorizite.Core.Lib;
 using Microsoft.Extensions.Logging;
 using RmlUiNet;
@@ -27,7 +26,7 @@ namespace RmlUi.Lib.RmlUi {
             _log = logger;
             _backend = backend;
             _panelManager = panelManager;
-            _themeFile = PathHelpers.TryMakeDevPath(Path.Combine(CoreUIPlugin.Instance!.AssemblyDirectory, "assets", "theme.rcss"));
+            _themeFile = PathHelpers.TryMakeDevPath(Path.Combine(RmlUiPlugin.Instance!.AssemblyDirectory, "assets", "theme.rcss"));
             LoadTheme();
         }
 
@@ -100,7 +99,7 @@ namespace RmlUi.Lib.RmlUi {
         }
 
         public override void OnDocumentLoad(ElementDocument document) {
-            if (!CoreUIPlugin.Instance._isTogglingDebugger) {
+            if (!RmlUiPlugin.Instance._isTogglingDebugger) {
                 _documents.TryAdd(document.NativePtr, document);
                 document.AddStyleSheetContainer(_styleSheetContainer);
                 base.OnDocumentLoad(document);

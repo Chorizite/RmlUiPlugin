@@ -39,7 +39,10 @@
     <UseProjectNamespaceForGitVersionInformation>true</UseProjectNamespaceForGitVersionInformation>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="README.md" />
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <Target Name="VSGitVersion" BeforeTargets="PreBuildEvent" Condition="$(MSBuildRuntimeType)=='Full'">

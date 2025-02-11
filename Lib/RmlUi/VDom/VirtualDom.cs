@@ -157,7 +157,7 @@ namespace RmlUi.Lib.RmlUi.VDom {
                 }
             }
             catch (Exception ex) {
-                CoreUIPlugin.Log.LogError($"Failed to run patch {patch.Type} on Old: {oldNode} New: {newNode} Parent: {parentNode} {ex}");
+                RmlUiPlugin.Log.LogError($"Failed to run patch {patch.Type} on Old: {oldNode} New: {newNode} Parent: {parentNode} {ex}");
             }
         }
     }

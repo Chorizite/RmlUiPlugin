@@ -38,7 +38,7 @@ namespace RmlUi.Lib.RmlUi.VDom {
                             eventAction(e);
                         }
                         catch (Exception ex) {
-                            CoreUIPlugin.Log.LogError(ex, ex.Message);
+                            RmlUiPlugin.Log.LogError(ex, ex.Message);
                         }
                     }
                 };

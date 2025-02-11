@@ -16,11 +16,11 @@ using Autofac;
 namespace RmlUi.Lib.Serialization {
     // lol
     public class UIDataModelJsonConverter : JsonConverter<UIDataModel> {
-        private readonly CoreUIPlugin _plugin;
+        private readonly RmlUiPlugin _plugin;
         private JsonSerializerOptions _options;
 
         public UIDataModelJsonConverter() {
-            _plugin = CoreUIPlugin.Instance;
+            _plugin = RmlUiPlugin.Instance;
         }
 
         public override bool CanConvert(Type typeToConvert) {
@@ -173,7 +173,7 @@ namespace RmlUi.Lib.Serialization {
                     WriteDataVariableList(model, writer, options);
                 }
                 else {
-                    CoreUIPlugin.Log.LogWarning($"Property {model.GetType().Name}.{prop.Name} ({prop.PropertyType}) is not serializable 1");
+                    RmlUiPlugin.Log.LogWarning($"Property {model.GetType().Name}.{prop.Name} ({prop.PropertyType}) is not serializable 1");
                 }
             }
 
@@ -256,7 +256,7 @@ namespace RmlUi.Lib.Serialization {
                 return;
             }
             writer.WriteStringValue($"Property {model.GetType().Name}.{name} ({type}) is not serializable");
-            CoreUIPlugin.Log.LogWarning($"Property {model.GetType().Name}.{name} ({type}) is not serializable 2");
+            RmlUiPlugin.Log.LogWarning($"Property {model.GetType().Name}.{name} ({type}) is not serializable 2");
         }
     }
 }

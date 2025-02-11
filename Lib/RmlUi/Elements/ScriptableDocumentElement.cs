@@ -21,7 +21,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using XLua;
-using static Core.UI.Lib.RmlUi.Elements.ScriptableDocumentElement;
 
 namespace RmlUi.Lib.RmlUi.Elements {
     public partial class ScriptableDocumentElement : ElementDocument {
@@ -46,7 +45,7 @@ namespace RmlUi.Lib.RmlUi.Elements {
 
         internal UIDocument Panel { get; set; }
 
-        public LuaContext LuaContext => CoreUIPlugin.Lua.Context;
+        public LuaContext LuaContext => RmlUiPlugin.Lua.Context;
         public ISharedState SharedState { get; private set; }
         public ReactiveHelpers Rx { get; private set; }
         public string DocumentDirectory => Path.GetDirectoryName(GetSourceURL());
@@ -74,12 +73,12 @@ namespace RmlUi.Lib.RmlUi.Elements {
         }
 
         private byte[] UIModulesLoader(ref string filepath) {
-            var rxPath = Path.Combine(CoreUIPlugin.Instance.AssemblyDirectory, "lua", "rx.lua");
+            var rxPath = Path.Combine(RmlUiPlugin.Instance.AssemblyDirectory, "lua", "rx.lua");
             if (filepath == "rx" && File.Exists(rxPath)) {
                 return File.ReadAllBytes(rxPath);
             }
 
-            var jsonPath = Path.Combine(CoreUIPlugin.Instance.AssemblyDirectory, "lua", "json.lua");
+            var jsonPath = Path.Combine(RmlUiPlugin.Instance.AssemblyDirectory, "lua", "json.lua");
             if (filepath == "json" && File.Exists(jsonPath)) {
                 return File.ReadAllBytes(jsonPath);
             }
@@ -138,7 +137,7 @@ namespace RmlUi.Lib.RmlUi.Elements {
                 }));
             }
             else {
-                CoreUIPlugin.Log.LogError($"Failed to find external script: {source_path} in {GetSourceURL()}");
+                RmlUiPlugin.Log.LogError($"Failed to find external script: {source_path} in {GetSourceURL()}");
             }
         }
 
@@ -175,7 +174,7 @@ namespace RmlUi.Lib.RmlUi.Elements {
                     }
                 }
                 catch (Exception e) {
-                    CoreUIPlugin.Log.LogError($"Failed to patch ui from state: {LuaContext.FormatDocumentException(e)}");
+                    RmlUiPlugin.Log.LogError($"Failed to patch ui from state: {LuaContext.FormatDocumentException(e)}");
                 }
             });
 

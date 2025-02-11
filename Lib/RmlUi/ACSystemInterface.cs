@@ -1,5 +1,4 @@
-﻿using Core.UI;
-using RmlUi.Lib.Fonts;
+﻿using RmlUi.Lib.Fonts;
 using Microsoft.Extensions.Logging;
 using RmlUiNet;
 using System;
@@ -7,7 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace ACUI.Lib.RmlUi {
+namespace RmlUi.Lib.RmlUi {
     public class ACSystemInterface : SystemInterface {
         private readonly DateTime _start;
         private readonly ILogger? _log;
@@ -111,29 +110,29 @@ namespace ACUI.Lib.RmlUi {
                 var parts = WantedCursor.Substring(2).Split(' ');
                 // try parse hex string to uint
                 if (!uint.TryParse(parts[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out cursorDid)) {
-                    CoreUIPlugin.Log.LogError($"Invalid cursor did: {WantedCursor}");
+                    RmlUiPlugin.Log.LogError($"Invalid cursor did: {WantedCursor}");
                     return;
                 }
 
                 if (parts.Length > 1 && !int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out hotX)) {
-                    CoreUIPlugin.Log.LogError($"Invalid hotX: {parts[1]}");
+                    RmlUiPlugin.Log.LogError($"Invalid hotX: {parts[1]}");
                 }
 
                 if (parts.Length > 2 && !int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out hotY)) {
-                    CoreUIPlugin.Log.LogError($"Invalid hotX: {parts[2]}");
+                    RmlUiPlugin.Log.LogError($"Invalid hotX: {parts[2]}");
                 }
-                CoreUIPlugin.Instance.Backend.SetCursorDid(cursorDid, hotX, hotY);
+                RmlUiPlugin.Instance.Backend.SetCursorDid(cursorDid, hotX, hotY);
                 return;
             }
-            CoreUIPlugin.Instance.Backend.SetCursorDid(0);
+            RmlUiPlugin.Instance.Backend.SetCursorDid(0);
         }
 
         public override void SetClipboardText(string text) {
-            CoreUIPlugin.Instance.Backend.SetClipboardText(text);
+            RmlUiPlugin.Instance.Backend.SetClipboardText(text);
         }
 
         public override string GetClipboardText() {
-            return CoreUIPlugin.Instance.Backend.GetClipboardText() ?? "";
+            return RmlUiPlugin.Instance.Backend.GetClipboardText() ?? "";
         }
 
         public override void ActivateKeyboard(float caretX, float caretY, float lineHeight) {

@@ -1,4 +1,4 @@
-﻿using ACUI;
+﻿using RmlUi;
 using Autofac;
 using RmlUi.Lib.Serialization;
 using Microsoft.Extensions.Logging;
@@ -32,12 +32,12 @@ namespace RmlUi.Models {
         }
 
         public virtual void Init(string name) {
-            if (CoreUIPlugin.RmlContext is null) {
+            if (RmlUiPlugin.RmlContext is null) {
                 return;
             }
 
             Name = name;
-            _modelConstructor = CoreUIPlugin.RmlContext.CreateDataModel(name);
+            _modelConstructor = RmlUiPlugin.RmlContext.CreateDataModel(name);
             BuildBindings();
             //PropertyChanged += HandlePropertyChanged;
         }
@@ -48,7 +48,7 @@ namespace RmlUi.Models {
                     action(evt, variants);
                 }
                 catch (Exception ex) {
-                    CoreUIPlugin.Log?.LogError(ex, $"Error in data model action ({Name}.{name}):");
+                    RmlUiPlugin.Log?.LogError(ex, $"Error in data model action ({Name}.{name}):");
                 }
             });
         }
@@ -86,7 +86,7 @@ namespace RmlUi.Models {
 
         public virtual void Dispose() {
             if (!string.IsNullOrEmpty(Name)) {
-                CoreUIPlugin.RmlContext?.RemoveDataModel(Name);
+                RmlUiPlugin.RmlContext?.RemoveDataModel(Name);
             }
             _modelConstructor?.Dispose();
         }

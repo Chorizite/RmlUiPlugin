@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ACUI.Lib {
+namespace RmlUi.Lib {
     public class PanelAddedEventArgs : EventArgs {
         public Panel Panel { get; init; }
 

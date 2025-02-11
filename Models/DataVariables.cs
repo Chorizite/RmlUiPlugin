@@ -1,5 +1,4 @@
-﻿using ACUI.Lib;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using RmlUiNet;
 using System;
 using System.Collections.Generic;
@@ -204,7 +203,7 @@ namespace RmlUi.Models {
                 _value = value;
             }
             else {
-                Core.UI.CoreUIPlugin.Log.LogError($"!!!!! Unsupported type: {typeof(T)}");
+                RmlUiPlugin.Log.LogError($"!!!!! Unsupported type: {typeof(T)}");
             }
         }
 
@@ -234,7 +233,7 @@ namespace RmlUi.Models {
                 variant = new Variant(Convert.ToBoolean(Value));
             }
             else {
-                Core.UI.CoreUIPlugin.Log.LogError($"Unsupported GET type: {typeof(T)}");
+                RmlUiPlugin.Log.LogError($"Unsupported GET type: {typeof(T)}");
                 variant = default(Variant);
                 return false;
             }
@@ -262,7 +261,7 @@ namespace RmlUi.Models {
                 Value = (T)variant.Value!;
             }
             else {
-                Core.UI.CoreUIPlugin.Log.LogError($"Unsupported SET type: {typeof(T)} / {variant.Type}");
+                RmlUiPlugin.Log.LogError($"Unsupported SET type: {typeof(T)} / {variant.Type}");
                 return false;
             }
 
@@ -273,7 +272,7 @@ namespace RmlUi.Models {
             if (Value is DataVariable dv) {
                 return dv.Definition.Size(ptr);
             }
-            Core.UI.CoreUIPlugin.Log.LogError($"Unsupported Size type: {typeof(T)} /  {Value}");
+            RmlUiPlugin.Log.LogError($"Unsupported Size type: {typeof(T)} /  {Value}");
             return 0;
         }
 
@@ -283,7 +282,7 @@ namespace RmlUi.Models {
                     return Value.GetType().GetProperty(name).GetValue(Value) as DataVariable;
                 }
             }
-            Core.UI.CoreUIPlugin.Log.LogError($"Unsupported Child 123 type: {typeof(T)} / {name} / {index} {Value}");
+            RmlUiPlugin.Log.LogError($"Unsupported Child 123 type: {typeof(T)} / {name} / {index} {Value}");
             return null;
         }
     }

@@ -4,7 +4,7 @@ using RmlUiNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
-namespace ACUI.Lib.RmlUi {
+namespace RmlUi.Lib.RmlUi {
     public class ACFileInterface : FileInterface {
         private readonly ILogger _log;
         private List<FileStream> m_Streams = new List<FileStream>();

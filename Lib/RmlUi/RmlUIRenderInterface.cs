@@ -10,10 +10,9 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using Core.UI;
 using Microsoft.Extensions.Logging;
 
-namespace ACUI.Lib.RmlUi {
+namespace RmlUi.Lib.RmlUi {
     public unsafe class RmlUIRenderInterface : RenderInterface {
         private readonly IRenderInterface _renderer;
         private readonly Dictionary<IntPtr, ITexture> _textures = new Dictionary<IntPtr, ITexture>();
@@ -55,7 +54,7 @@ namespace ACUI.Lib.RmlUi {
         }
 
         public override IntPtr LoadTexture(ref Vector2i textureDimensions, string source) {
-            CoreUIPlugin.Log.LogTrace($"Loading texture: {source}");
+            RmlUiPlugin.Log.LogTrace($"Loading texture: {source}");
             var texture = _renderer.LoadTexture(source, out var dim);
             textureDimensions = new Vector2i((int)dim.X, (int)dim.Y);
 

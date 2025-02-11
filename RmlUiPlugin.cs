@@ -1,6 +1,4 @@
-﻿using ACUI.Lib;
-using ACUI.Lib.RmlUi;
-using Autofac;
+﻿using Autofac;
 using RmlUi.Lib;
 using RmlUi.Lib.RmlUi;
 using RmlUi.Models;
@@ -104,7 +102,7 @@ namespace RmlUi {
         protected override void Initialize() {
             InitRmlUI();
 
-            OnScreenChanged += CoreUIPlugin_OnScreenChanged;
+            OnScreenChanged += RmlUiPlugin_OnScreenChanged;
 
             Backend.Renderer.OnRender2D += Renderer_OnRender2D;
             Backend.Renderer.OnGraphicsPostReset += Renderer_OnGraphicsPostReset;
@@ -353,7 +351,7 @@ namespace RmlUi {
             _didInitRml = false;
         }
 
-        private void CoreUIPlugin_OnScreenChanged(object? sender, EventArgs e) {
+        private void RmlUiPlugin_OnScreenChanged(object? sender, EventArgs e) {
             PanelManager.DestroyScreen();
             if (_gameScreenRmls.TryGetValue(Screen, out var rmlFilePath)) {
                 PanelManager.CreateScreen(Screen, rmlFilePath);
@@ -367,7 +365,7 @@ namespace RmlUi {
             try {
                 Backend.Renderer.OnGraphicsPostReset -= Renderer_OnGraphicsPostReset;
                 Backend.Renderer.OnRender2D -= Renderer_OnRender2D;
-                OnScreenChanged -= CoreUIPlugin_OnScreenChanged;
+                OnScreenChanged -= RmlUiPlugin_OnScreenChanged;
 
                 Backend.Input.OnKeyDown -= Input_OnKeyDown;
 

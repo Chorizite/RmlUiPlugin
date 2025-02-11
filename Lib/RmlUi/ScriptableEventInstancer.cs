@@ -13,8 +13,8 @@ namespace RmlUi.Lib.RmlUi {
                 case RmlUiNet.EventId.DragDrop:
                 case RmlUiNet.EventId.DragOver:
                 case RmlUiNet.EventId.DragOut:
-                    if (CoreUIPlugin.Instance?.PanelManager._externalDragDropEventData is not null) {
-                        foreach (var kv in CoreUIPlugin.Instance.PanelManager._externalDragDropEventData) {
+                    if (RmlUiPlugin.Instance?.PanelManager._externalDragDropEventData is not null) {
+                        foreach (var kv in RmlUiPlugin.Instance.PanelManager._externalDragDropEventData) {
                             if (!parameters.TryAdd(kv.Key, kv.Value)) {
                                 parameters[kv.Key] = kv.Value;
                             }

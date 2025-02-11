@@ -1,7 +1,6 @@
-﻿using ACUI.Lib.RmlUi;
+﻿using RmlUi.Lib.RmlUi;
 using Chorizite.Common;
 using Chorizite.Core.Render;
-using Core.UI;
 using RmlUi.Lib;
 using RmlUi.Lib.Fonts;
 using Microsoft.Extensions.Logging;
@@ -12,7 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace ACUI.Lib {
+namespace RmlUi.Lib {
     /// <summary>
     /// Manages panels and screens
     /// </summary>
@@ -211,8 +210,8 @@ namespace ACUI.Lib {
             foreach (var panel in panels) {
                 if (panel.IsGhost || panel.ScriptableDocument is null) continue;
 
-                var mouseX = CoreUIPlugin.Instance.Backend.Input.MouseX;
-                var mouseY = CoreUIPlugin.Instance.Backend.Input.MouseY;
+                var mouseX = RmlUiPlugin.Instance.Backend.Input.MouseX;
+                var mouseY = RmlUiPlugin.Instance.Backend.Input.MouseY;
 
                 var panelX = panel.ScriptableDocument.GetAbsoluteLeft();
                 var panelY = panel.ScriptableDocument.GetAbsoluteTop();
@@ -243,7 +242,7 @@ namespace ACUI.Lib {
 
         public Panel ShowModalConfirmation(string text, Action<string> callback, params string[] buttons) {
             CloseModal();
-            var modalTemplate = System.IO.Path.Combine(CoreUIPlugin.Instance.AssemblyDirectory, "assets", "templates", "modal.rml");
+            var modalTemplate = System.IO.Path.Combine(RmlUiPlugin.Instance.AssemblyDirectory, "assets", "templates", "modal.rml");
             var _modalPanel = CreatePanel($"Modal_{text}", modalTemplate, (panel) => {
                 var modal = panel.ScriptableDocument.LuaContext.NewTable();
                 modal.SetInPath("text", text);
