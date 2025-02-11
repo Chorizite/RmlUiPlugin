@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(TargetFramework)\</OutputPath>
+    <IntermediateOutputPath>obj\$(TargetFramework)\</IntermediateOutputPath>
+    <PackageOutputPath>bin\</PackageOutputPath>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <ChoriziteSetPackageMeta>False</ChoriziteSetPackageMeta>
+    <ChoriziteSetVersion>False</ChoriziteSetVersion>
+    <ChoriziteSetPackageVersion>False</ChoriziteSetPackageVersion>
+    <ChoriziteSetAssemblyVersion>False</ChoriziteSetAssemblyVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>Chorizite.Plugins.RmlUi</Title>
+    <Product>Chorizite.Plugins.RmlUi</Product>
+    <PackageId>Chorizite.Plugins.RmlUi</PackageId>
+    <Authors>Chorizite</Authors>
+    <Company>Chorizite</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>A Chorizite plugin that adds rmlui interfaces with html/css/lua scripting.</Description>
+    <RepositoryUrl>https://github.com/Chorizite/LuaPlugin</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>true</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
+    <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
+    <UseProjectNamespaceForGitVersionInformation>true</UseProjectNamespaceForGitVersionInformation>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
+  </ItemGroup>
+
+  <Target Name="VSGitVersion" BeforeTargets="PreBuildEvent" Condition="$(MSBuildRuntimeType)=='Full'">
+    <Exec Command="$(NuGetPackageRoot)\gitversion.msbuild\6.1.0\tools\net8.0\gitversion.exe -showvariable SemVer" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="Version" />
+      <Output TaskParameter="ConsoleOutput" PropertyName="PackageVersion" />
+    </Exec>
+    <Exec Command="$(NuGetPackageRoot)\gitversion.msbuild\6.1.0\tools\net8.0\gitversion.exe -showvariable Major" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="AssemblyVersion" />
+    </Exec>
+  </Target>
+
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('./release-notes.md')">
+    <ReadLinesFromFile File="./release-notes.md" >
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines"/>
+    </ReadLinesFromFile>
+
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <PackageReference Include="Chorizite.Common" Version="1.0.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Autofac" Version="8.2.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Chorizite.Core" Version="0.0.4" ExcludeAssets="runtime" />
+    <PackageReference Include="Chorizite.Plugins.Lua" Version="0.0.4" ExcludeAssets="runtime" />
+    <PackageReference Include="Cortex.Net" Version="0.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" ExcludeAssets="runtime" />
+    <PackageReference Include="RmlUi.Net" Version="1.0.0" />
+    <PackageReference Include="RoyT.TrueType" Version="0.2.0" />
+    <PackageReference Include="System.Collections" Version="4.3.0" ExcludeAssets="runtime" />
+    <PackageReference Include="DatReaderWriter" Version="0.1.0-beta.44" ExcludeAssets="runtime" />
+    <PackageReference Include="Chorizite.Plugins.MSBuildTasks" Version="0.0.3" />
+    <PackageReference Include="GitVersion.MsBuild" Version="6.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="assets\acsprites.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\coin.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\LatoLatin-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\panel.9.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\panels\Breakout.rml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\panels\Logs.rml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\panels\Test.rml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\panels\todo.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\pizza.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\scroll-vert-bg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\templates\modal.rml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\templates\tabpanel.rml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\theme.rcss">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="lua\rx.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	  <None Update="lua\json.lua">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lua\" />
+  </ItemGroup>
+  <Target Name="DeleteFiles" AfterTargets="Build">
+     <ItemGroup>
+       <FilesToDelete Include="$(OutDir)\Microsoft.AspNetCore.*" />
+       <FilesToDelete Include="$(OutDir)\Microsoft.Extensions.DependencyInjection*" />
+       <FilesToDelete Include="$(OutDir)\Microsoft.Extensions.Options*" />
+       <FilesToDelete Include="$(OutDir)\Microsoft.Extensions.Primitives*" />
+       <FilesToDelete Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
+       <FilesToDelete Include="$(OutDir)\System.IO.Pipelines.dll" />
+       <FilesToDelete Include="$(OutDir)\Microsoft.JSInterop.dll" />
+     </ItemGroup>
+     <Message Text="Deleting Files @(FilesToDelete)" />
+     <Delete Files="@(FilesToDelete)">
+       <Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
+     </Delete>
+     <Message Text="Files deleted: @(FilesDeleted)" />
+  </Target>
+</Project>

@@ -1,0 +1,10 @@
+name: 'Make Release'
+on: workflow_dispatch
+
+jobs:
+  make-release:
+    uses: chorizite/github-workflows/.github/workflows/core-make-release-dotnet-gitversion.yml@master
+    permissions: write-all
+    with:
+      package_id: Chorizite.Plugins.RmlUi
+    secrets: inherit

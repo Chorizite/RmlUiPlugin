@@ -1,0 +1,9 @@
+{
+  "name": "RmlUi",
+  "entryfile": "RmlUi.dll",
+  "author": "Chorizite",
+  "version": "0.0.0-dev",
+  "description": "Adds rmlui interfaces with html/css/lua scripting",
+  "dependencies": [ "Lua@0.0.4" ],
+  "environments": [ "Launcher", "Client" ]
+}

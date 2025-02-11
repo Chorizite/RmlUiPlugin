@@ -1,0 +1,15 @@
+name: 'Build'
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    uses: chorizite/github-workflows/.github/workflows/core-build-dotnet-gitversion.yml@master
+    permissions:
+      packages: write
+      contents: write
+    with:
+      package_id: Chorizite.Plugins.RmlUi
+
+
