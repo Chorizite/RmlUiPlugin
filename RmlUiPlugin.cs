@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using RmlUi.Lib;
 using RmlUi.Lib.RmlUi;
-using RmlUi.Models;
 using Chorizite.Core;
 using Chorizite.Core.Backend;
 using Chorizite.Core.Plugins;
@@ -35,7 +34,6 @@ namespace RmlUi {
         internal ScriptableDocumentInstancer ScriptableDocumentInstancer;
         internal readonly IPluginManager PluginManager;
 
-        private Dictionary<string, UIDataModel> _models = [];
         private readonly Dictionary<string, string> _gameScreenRmls = [];
         private RmlUIRenderInterface? _rmlRenderInterface;
         internal ACSystemInterface? _rmlSystemInterface;
@@ -169,35 +167,23 @@ namespace RmlUi {
         }
 
         /// <summary>
-        /// Register a UI model to the specified name
-        /// </summary>
-        /// <param name="name">The name to bind the model to</param>
-        /// <param name="model">The model to bind</param>
-        /// <returns></returns>
-        public bool RegisterUIModel(string name, UIDataModel model) {
-            if (_models.ContainsKey(name)) {
-                _models[name].Dispose();
-                _models.Remove(name);
-            }
-            _models.Add(name, model);
-            model.Init(name);
-            return true;
-        }
-
-        /// <summary>
-        /// Unregister a UI model
+        /// Create a panel from an RML string
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="model"></param>
-        public void UnregisterUIModel(string name, UIDataModel model) {
-            _models.Remove(name);
-        }
-
-
+        /// <param name="rmlContents"></param>
+        /// <param name="init"></param>
+        /// <returns></returns>
         public Panel CreatePanelFromString(string name, string rmlContents, Action<UIDocument>? init = null) {
             return PanelManager.CreatePanelFromString(name, rmlContents, init);
         }
 
+        /// <summary>
+        /// Create a panel from an RML file
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="rmlFilePath"></param>
+        /// <param name="init"></param>
+        /// <returns></returns>
         public Panel? CreatePanel(string name, string rmlFilePath, Action<UIDocument>? init = null) {
             if (!File.Exists(rmlFilePath)) {
                 Log?.LogError($"Could not find RML file {rmlFilePath}");
@@ -205,9 +191,11 @@ namespace RmlUi {
             }
             return PanelManager.CreatePanel(name, rmlFilePath, init);
         }
-        #endregion
 
-        internal void ToggleDebugger() {
+        /// <summary>
+        /// Toggle the RmlUi debugger
+        /// </summary>
+        public void ToggleDebugger() {
             if (!_didInitRml || RmlContext is null) return;
 
             _isTogglingDebugger = true;
@@ -223,16 +211,10 @@ namespace RmlUi {
             }
             _isTogglingDebugger = false;
         }
+        #endregion // Public API
 
         private void InitRmlUI() {
             if (_didInitRml) return;
-
-            try {
-                var x = Backend.Renderer.ViewportSize.X;
-            }
-            catch (Exception ex) {
-                return;
-            }
 
             try {
                 // we need to manually load RmlUiNative.dll with an absolute path, or DllImport will
@@ -335,11 +317,6 @@ namespace RmlUi {
             }
 
             _rmlInput?.Dispose();
-
-            foreach (var model in _models.Values) {
-                model.Dispose();
-            }
-            _models.Clear();
             _themePlugin?.Dispose();
             ScriptableDocumentInstancer?.Dispose();
             _scriptableEventListenerInstancer?.Dispose();
