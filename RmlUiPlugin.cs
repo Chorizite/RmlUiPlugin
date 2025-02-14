@@ -23,9 +23,6 @@ using Chorizite.Core.Input;
 using Lua;
 
 namespace RmlUi {
-    /// <summary>
-    /// This is the main plugin class. When your plugin is loaded, Startup() is called, and when it's unloaded Shutdown() is called.
-    /// </summary>
     public class RmlUiPlugin : IPluginCore, ISerializeState<UIState> {
         internal static ILogger Log;
         internal static LuaPluginCore Lua;
@@ -35,8 +32,10 @@ namespace RmlUi {
         internal readonly IPluginManager PluginManager;
 
         private readonly Dictionary<string, string> _gameScreenRmls = [];
+        internal readonly Dictionary<string, string> _templates = [];
         private RmlUIRenderInterface? _rmlRenderInterface;
         internal ACSystemInterface? _rmlSystemInterface;
+        private ACFileInterface _rmlFileInterface;
         private ThemePlugin _themePlugin;
         private RmlInputManager? _rmlInput;
         private bool _didInitRml;
@@ -99,6 +98,9 @@ namespace RmlUi {
 
         protected override void Initialize() {
             InitRmlUI();
+
+            RegisterTemplate("modal", Path.Combine(AssemblyDirectory, "assets", "templates", "modal.rml"));
+            RegisterTemplate("tabpanel", Path.Combine(AssemblyDirectory, "assets", "templates", "tabpanel.rml"));
 
             OnScreenChanged += RmlUiPlugin_OnScreenChanged;
 
@@ -211,6 +213,28 @@ namespace RmlUi {
             }
             _isTogglingDebugger = false;
         }
+
+        /// <summary>
+        /// Register a template
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="rmlPath"></param>
+        /// <returns></returns>
+        public bool RegisterTemplate(string name, string rmlPath) {
+            if (!File.Exists(rmlPath)) {
+                Log.LogError($"Could not register template '{name}'! Could not find RML file {rmlPath}");
+                return false;
+            }
+
+            return _templates.TryAdd(name, rmlPath);
+        }
+
+        /// <summary>
+        /// Unregister a template
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool UnregisterTemplate(string name) => _templates.Remove(name, out _);
         #endregion // Public API
 
         private void InitRmlUI() {
@@ -222,9 +246,11 @@ namespace RmlUi {
 
                 _rmlRenderInterface = new RmlUIRenderInterface(Backend.Renderer);
                 _rmlSystemInterface = new ACSystemInterface(FontManager, Log);
+                _rmlFileInterface = new ACFileInterface(Log);
 
                 Rml.SetSystemInterface(_rmlSystemInterface);
                 Rml.SetRenderInterface(_rmlRenderInterface);
+                Rml.SetFileInterface(_rmlFileInterface);
 
                 var size = new Vector2i((int)Backend.Renderer.ViewportSize.X, (int)Backend.Renderer.ViewportSize.Y);
 
@@ -324,6 +350,7 @@ namespace RmlUi {
             _renderObjInstancer?.Dispose();
             _rmlRenderInterface?.Dispose();
             _rmlSystemInterface?.Dispose();
+            _rmlFileInterface?.Dispose();
 
             _didInitRml = false;
         }
