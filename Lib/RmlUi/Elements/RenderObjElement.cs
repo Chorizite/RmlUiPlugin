@@ -10,13 +10,11 @@ namespace RmlUi.Lib.RmlUi.Elements {
     public class RenderObjElement : ElementCustom {
         private IChoriziteBackend _backend;
         private ILogger _log;
-        private IDatReaderInterface _dat;
         private uint _dataId;
 
-        public RenderObjElement(IChoriziteBackend backend, IDatReaderInterface dat, ILogger log, XMLAttributes attributes) : base("renderobj") {
+        public RenderObjElement(IChoriziteBackend backend, ILogger log, XMLAttributes attributes) : base("renderobj") {
             _backend = backend;
             _log = log;
-            _dat = dat;
 
             var did = attributes.GetString("did");
             _log.LogDebug($"Creating RenderObjElement {did}");

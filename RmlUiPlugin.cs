@@ -42,8 +42,6 @@ namespace RmlUi {
         private bool _isDebugging;
         private UIState _state;
 
-        private readonly IDatReaderInterface _dat;
-
         private ScriptableEventListenerInstancer _scriptableEventListenerInstancer;
         private ScriptableEventInstancer _eventInstancer;
         private RenderObjElementInstancer _renderObjInstancer;
@@ -82,14 +80,13 @@ namespace RmlUi {
         }
         private readonly WeakEvent<EventArgs> _OnScreenChanged = new WeakEvent<EventArgs>();
 
-        protected RmlUiPlugin(AssemblyPluginManifest manifest, IChoriziteConfig config, IPluginManager pluginManager, IChoriziteBackend ChoriziteBackend, Lua.LuaPluginCore lua, ILifetimeScope scope, IDatReaderInterface dat, ILogger log) : base(manifest) {
+        protected RmlUiPlugin(AssemblyPluginManifest manifest, IChoriziteConfig config, IPluginManager pluginManager, IChoriziteBackend ChoriziteBackend, Lua.LuaPluginCore lua, ILifetimeScope scope, ILogger log) : base(manifest) {
             Instance = this;
             Log = log;
             PluginManager = pluginManager;
             Backend = ChoriziteBackend;
             FontManager = new FontManager(Log);
             Lua = lua;
-            _dat = dat;
 
             var rmlUINativePath = Path.Combine(AssemblyDirectory, "runtimes", (IntPtr.Size == 8) ? "win-x64" : "win-x86", "native", "RmlUiNative.dll");
             Log?.LogTrace($"Manually pre-loading {rmlUINativePath}");
@@ -262,7 +259,7 @@ namespace RmlUi {
                     ScriptableDocumentInstancer = new ScriptableDocumentInstancer(Backend, Log);
                     _scriptableEventListenerInstancer = new ScriptableEventListenerInstancer(ScriptableDocumentInstancer, Log);
                     _eventInstancer = new ScriptableEventInstancer();
-                    _renderObjInstancer = new RenderObjElementInstancer(Backend, _dat, Log);
+                    _renderObjInstancer = new RenderObjElementInstancer(Backend, Log);
 
                     RmlContext = Rml.CreateContext("viewport", size);
 
