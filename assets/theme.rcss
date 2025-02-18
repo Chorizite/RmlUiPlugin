@@ -100,7 +100,7 @@ form {
 
 @spritesheet acsprites
 {
-	/* Path: D:/projects/Chorizite/Plugins/Core.UI/assets/acsprites.png */
+	/* Path: D:/projects/Chorizite.RmlUi/assets/acsprites.png */
 	src: acsprites.png;
 
 	button-primary: 0px 0px 151px 46px;
@@ -184,6 +184,22 @@ form {
 	tab-active-inner: 178px 285px 8px 7px;
 	tab-hovered-inner: 177px 257px 10px 9px;
 	tab-header-bg: 200px 247px 10px 25px;
+	icon-slot-bg: 0px 480px 32px 32px;
+	icon-arrow: 32px 480px 32px 32px;
+	icon-invalid: 64px 480px 32px 32px;
+	icon-valid: 96px 480px 32px 32px;
+	icon-border-thin: 128px 480px 32px 32px;
+	icon-border-thick: 160px 480px 32px 32px;
+	icon-move: 192px 480px 32px 32px;
+	icon-slot-bg2: 224px 480px 32px 32px;
+	panel-locked: 166px 155px 15px 15px;
+	panel-locked-inner: 170px 159px 7px 7px;
+	radio-0: 203px 117px 13px 13px;
+	radio-25: 203px 131px 13px 13px;
+	radio-75: 203px 145px 13px 13px;
+	radio-100: 203px 159px 13px 13px;
+	panel-thick: 125px 222px 26px 26px;
+	panel-thick-inner: 136px 233px 5px 4px;
 }
 
 .panel {
@@ -368,62 +384,62 @@ input.checkbox
 
 input.radio
 {
-	decorator: image( dat://0x06004D19 );
+	decorator: image( radio-0 );
 }
 
 input.radio:checked
 {
-	decorator: image( dat://0x06004D17 );
+	decorator: image( radio-100 );
 }
 
 input.radio:hover, input.radio:focus-visible
 {
-	decorator: image( dat://0x06004D19 );
+	decorator: image( image( radio-25  );
 }
 
 input.radio:active
 {
-	decorator: image( dat://0x06004D17 );
+	decorator: image( radio-75 );
 }
 
 input.radio:checked:hover, input.radio:checked:focus-visible
 {
-	decorator: image( dat://0x06004D17 );
+	decorator: image( radio-75  );
 }
 
 input.radio:checked:active
 {
-	decorator: image( dat://0x06004D17 );
+	decorator: image( radio-75 );
 }
 
 input.checkbox
 {
-	decorator: image( dat://0x0600191F );
+	decorator: image( radio-0 );
 }
 
 input.checkbox:hover, input.checkbox:focus-visible
 {
-	decorator: image( dat://0x0600191F );
+	decorator: image( radio-25 );
 }
 
 input.checkbox:active
 {
-	decorator: image( dat://0x0600191A );
+	decorator: image( radio-75 );
 }
 
 input.checkbox:checked
 {
-	decorator: image( dat://0x0600191A );
+	decorator: image( radio-100  );
 }
 
 input.checkbox:checked:hover, input.checkbox:checked:focus-visible
 {
-	decorator: image( dat://0x0600191A );
+	decorator: image( radio-75 );
 }
 
 input.checkbox:checked:active
 {
-	decorator: image( dat://0x0600191A );
+	decorator: image( radio-25 );
 }
 
 select

@@ -4,6 +4,6 @@
   "author": "Chorizite",
   "version": "0.0.0-dev",
   "description": "Adds rmlui interfaces with html/css/lua scripting",
-  "dependencies": [ "Lua@0.0.5" ],
+  "dependencies": [ "Lua@0.0.6" ],
   "environments": [ "Launcher", "Client" ]
 }

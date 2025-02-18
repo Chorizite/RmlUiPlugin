@@ -12,12 +12,10 @@ namespace RmlUi.Lib.RmlUi {
         private readonly Dictionary<IntPtr, RenderObjElement> _elements = [];
         private ILogger _log;
         private readonly IChoriziteBackend _backend;
-        private readonly IDatReaderInterface _dat;
 
-        public RenderObjElementInstancer(IChoriziteBackend backend, IDatReaderInterface dat, ILogger logger) : base("renderobj") {
+        public RenderObjElementInstancer(IChoriziteBackend backend, ILogger logger) : base("renderobj") {
             _log = logger;
             _backend = backend;
-            _dat = dat;
         }
         internal void Update() {
             var renderEls = _elements.Values.ToArray();
@@ -27,7 +25,7 @@ namespace RmlUi.Lib.RmlUi {
         }
 
         public override IntPtr OnInstanceElement(Element parent, string tag, XMLAttributes attributes) {
-            var document = new RenderObjElement(_backend, _dat, _log, attributes);
+            var document = new RenderObjElement(_backend, _log, attributes);
             _elements.Add(document.NativePtr, document);
             return document.NativePtr;
         }
