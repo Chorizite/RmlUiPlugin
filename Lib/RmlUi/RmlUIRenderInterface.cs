@@ -54,6 +54,7 @@ namespace RmlUi.Lib.RmlUi {
         }
 
         public override IntPtr LoadTexture(ref Vector2i textureDimensions, string source) {
+            source = ACFileInterface.TransformPath(source);
             RmlUiPlugin.Log.LogTrace($"Loading texture: {source}");
             var texture = _renderer.LoadTexture(source, out var dim);
             textureDimensions = new Vector2i((int)dim.X, (int)dim.Y);
