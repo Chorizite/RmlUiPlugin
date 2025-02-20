@@ -52,15 +52,17 @@
       }
     </style>
     <script type="">
+      local thisdoc = document
       -- set the fake tabpanel #window-title el to the documents title
-      document:GetElementById("window-title"):SetInnerRml(document:GetTitle())
+      thisdoc:GetElementById("window-title"):SetInnerRml(thisdoc:GetTitle())
+      thisdoc:GetElementById("window-close"):AddEventListener('click', function() thisdoc:Hide() end)
     </script>
 	</head>
 	<body class="window">
   	<div id="title-bar">
       <handle move_target="#document">
         <span id="window-title">Testing</span>
-        <div id="window-close" onclick="document:Hide()"></div>
+        <div id="window-close"></div>
       </handle>
     </div>
     <div id="content"></div>

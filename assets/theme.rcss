@@ -1,4 +1,8 @@
 ﻿/* reset */
+* {
+	font-family: Tahoma;
+}
+
 body, div,
 h1, h2, h3, h4,
 h5, h6, p,
@@ -394,7 +398,7 @@ input.radio:checked
 
 input.radio:hover, input.radio:focus-visible
 {
-	decorator: image( image( radio-25  );
+	decorator: image( radio-25 );
 }
 
 input.radio:active

@@ -26,6 +26,7 @@ namespace RmlUi.Lib {
         /// </summary>
         public bool ShowInBar { get; set; } = false;
 
+
         internal Panel(string name, string filename, Context context, ACSystemInterface rmlSystemInterface, ILogger log, Action<UIDocument>? init = null) : base(name, filename, context, rmlSystemInterface, log, false, init) {
 
         }

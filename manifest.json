@@ -5,6 +5,6 @@
   "icon": "icon.png",
   "version": "0.0.0-dev",
   "description": "Adds rmlui interfaces with html/css/lua scripting",
-  "dependencies": [ "Lua@0.0.6" ],
+  "dependencies": [ "Lua@0.0.7" ],
   "environments": [ "Launcher", "Client" ]
 }
