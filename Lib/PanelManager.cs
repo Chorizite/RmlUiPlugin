@@ -180,6 +180,7 @@ namespace RmlUi.Lib {
 
             panel.OnShow += Panel_OnShow;
             panel.OnHide += Panel_OnHide;
+            panel.OnAfterReload += Panel_OnAfterReload;
 
             _panels.Add(name, panel);
 
@@ -191,6 +192,10 @@ namespace RmlUi.Lib {
         }
 
         private void Panel_OnShow(object? sender, EventArgs e) {
+            _OnPanelVisibilityChanged?.Invoke(this, new PanelVisibilityChangedEventArgs((Panel)sender!, true));
+        }
+
+        private void Panel_OnAfterReload(object? sender, EventArgs e) {
             _OnPanelVisibilityChanged?.Invoke(this, new PanelVisibilityChangedEventArgs((Panel)sender!, true));
         }
 

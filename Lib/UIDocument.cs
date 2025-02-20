@@ -11,6 +11,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
+using Fizzler.Systems.HtmlAgilityPack;
+using System.Text.RegularExpressions;
 
 namespace RmlUi.Lib {
     public abstract class UIDocument : IDisposable {
@@ -19,6 +22,7 @@ namespace RmlUi.Lib {
         private readonly FileWatcher? _fileWatcher;
         private ElementDocument? _doc;
         private DateTime _requestedReloadTime = DateTime.MinValue;
+        private string? _iconUri;
 
         internal Context Context { get; }
 
@@ -73,31 +77,69 @@ namespace RmlUi.Lib {
 
         public ScriptableDocumentElement? ScriptableDocument => RmlUiPlugin.Instance.ScriptableDocumentInstancer.GetDocument(NativePtr);
 
+        /// <summary>
+        /// Whether or not the document is visible
+        /// </summary>
         public bool IsVisible { get; private set; }
 
+        /// <summary>
+        /// The uri of the icon for this document, if any
+        /// </summary>
+        public string? IconUri {
+            get => _iconUri;
+            set {
+                if (value != _iconUri) {
+                    _iconUri = value;
+                    _OnIconChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called before the document is rendered
+        /// </summary>
         public event EventHandler<EventArgs> OnBeforeRender {
             add => _OnBeforeRender.Subscribe(value);
             remove => _OnBeforeRender.Unsubscribe(value);
         }
         private WeakEvent<EventArgs> _OnBeforeRender = new();
 
+
+        /// <summary>
+        /// Called after the document is reloaded
+        /// </summary>
         public event EventHandler<EventArgs> OnAfterReload {
             add => _onAfterReload.Subscribe(value);
             remove => _onAfterReload.Unsubscribe(value);
         }
         private WeakEvent<EventArgs> _onAfterReload = new();
 
+        /// <summary>
+        /// Called when the document is hidden
+        /// </summary>
         public event EventHandler<EventArgs> OnHide {
             add => _OnHide.Subscribe(value);
             remove => _OnHide.Unsubscribe(value);
         }
         private WeakEvent<EventArgs> _OnHide = new();
 
+        /// <summary>
+        /// Called when the document is shown
+        /// </summary>
         public event EventHandler<EventArgs> OnShow {
             add => _OnShow.Subscribe(value);
             remove => _OnShow.Unsubscribe(value);
         }
         private WeakEvent<EventArgs> _OnShow = new();
+
+        /// <summary>
+        /// Called when the icon of the document changes
+        /// </summary>
+        public event EventHandler<EventArgs> OnIconChanged {
+            add => _OnIconChanged.Subscribe(value);
+            remove => _OnIconChanged.Unsubscribe(value);
+        }
+        private WeakEvent<EventArgs> _OnIconChanged = new();
 
         internal UIDocument(string name, string filename, Context context, ACSystemInterface rmlSystemInterface, ILogger log, bool isSource = false, Action<UIDocument>? init = null) {
             Name = name;
@@ -164,7 +206,7 @@ namespace RmlUi.Lib {
                     throw new Exception($"Unable to find document {_docFile}");
                 }
 
-                _doc = Context.LoadDocument(_docFile);
+                _doc = Context.LoadDocumentFromMemory(TransformRml(_docFile), _docFile.Replace("\\", "//"));
             }
             if (_doc is null) {
                 throw new Exception($"Unable to create RmlUi document {Name} {_docFile}");
@@ -194,6 +236,30 @@ namespace RmlUi.Lib {
             if (IsVisible) {
                 Show();
             }
+        }
+
+
+        private string TransformRml(string docFile) {
+            var html = System.IO.File.ReadAllText(docFile);
+
+            var metaRe = new Regex(@"<meta[^>]*name=""(?<name>[^""]*)""[^>]*content=""(?<content>[^""]*)""[^>]*>", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            foreach (Match m in metaRe.Matches(html)) {
+                var name = m.Groups["name"].Value;
+                var content = m.Groups["content"].Value;
+                if (name.ToLower() == "icon") {
+                    if (content.StartsWith("dat://")) {
+                        IconUri = content;
+                    }
+                    else {
+                        var iconPath = Path.Combine(Path.GetDirectoryName(docFile), content);
+                        if (System.IO.File.Exists(iconPath)) {
+                            IconUri = Path.GetFullPath(iconPath);
+                        }
+                    }
+                }
+            }
+
+            return html;
         }
 
         private void UnloadDoc() {

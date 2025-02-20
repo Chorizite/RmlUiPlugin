@@ -255,6 +255,9 @@ namespace RmlUi {
                     StyleSheetSpecification.RegisterProperty("click-sound", "none", false, false)
                         .AddParser("string", "none")
                         .GetId();
+                    StyleSheetSpecification.RegisterProperty("icon", "none", false, false)
+                        .AddParser("string", "none")
+                        .GetId();
 
                     ScriptableDocumentInstancer = new ScriptableDocumentInstancer(Backend, Log);
                     _scriptableEventListenerInstancer = new ScriptableEventListenerInstancer(ScriptableDocumentInstancer, Log);
