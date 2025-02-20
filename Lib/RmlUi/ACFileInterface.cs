@@ -61,11 +61,9 @@ namespace RmlUi.Lib.RmlUi {
                 var parts = path.Split("@plugins").LastOrDefault()?.TrimStart(['\\', '/']);
                 if (!string.IsNullOrEmpty(parts)) {
                     var pluginName = parts.Split('/').FirstOrDefault();
-                    RmlUiPlugin.Log.LogDebug($"Plugin Name: {pluginName} ({path})");
                     var plugin = RmlUiPlugin.Instance.PluginManager.GetPlugin<IPluginCore>(pluginName);
                     if (plugin != null) {
                         var templatePath = System.IO.Path.Combine(plugin.Manifest.BaseDirectory, string.Join('/', parts.Split('/').Skip(1)));
-                        RmlUiPlugin.Log.LogDebug($"Plugin templatePath: {templatePath} ({path})");
                         if (File.Exists(templatePath)) {
                             path = templatePath;
                         }
