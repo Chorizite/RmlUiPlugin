@@ -39,12 +39,12 @@ namespace RmlUi.Lib.RmlUi {
                 var fontName = match.Groups[1].Value;
                 var fontStyle = match.Groups[2].Value;
 
-                if (_fontManager.TryGetFont(fontName, fontStyle, out var font)) {
-                    if (_loadedFonts.Contains(font.Filename)) {
+                if (_fontManager.TryGetFontFile(fontName, fontStyle, out var font)) {
+                    if (_loadedFonts.Contains(font)) {
                         return true;
                     }
-                    _loadedFonts.Add(font.Filename);
-                    Rml.LoadFontFace(font.Filename);
+                    _loadedFonts.Add(font);
+                    Rml.LoadFontFace(font);
                     HasNewFontsLoaded = true;
                     return true;
                 }
