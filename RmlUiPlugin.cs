@@ -285,6 +285,8 @@ namespace RmlUi {
                     foreach (var fontFile in fontFiles) {
                         Rml.LoadFontFace(fontFile);
                     }
+
+                    //ToggleDebugger();
                 }
                 else {
                     throw new Exception("Unable to initialize RmlUi");

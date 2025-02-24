@@ -1,9 +1,11 @@
 ﻿using Autofac.Core;
 using Microsoft.Extensions.Logging;
-using RoyT.TrueType;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -13,67 +15,66 @@ using System.Threading.Tasks;
 namespace RmlUi.Lib.Fonts {
     public class FontManager : IDisposable {
         private readonly ILogger? _log;
-        private Dictionary<string, FontInfo> _availableFonts = new Dictionary<string, FontInfo>();
+        private Dictionary<string, string> _availableFonts = new Dictionary<string, string>();
 
-        public IEnumerable<FontInfo> AvailableFonts => _availableFonts.Values;
+        public IEnumerable<string> AvailableFonts => _availableFonts.Keys;
 
         internal FontManager(ILogger? log) {
             _log = log;
 
-            var fontFiles = new List<string>();
-
-            // TODO: this is very slow...
-            /*
-            var fontDir = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
-            if (Directory.Exists(fontDir)) {
-                var winfontsList = Directory.GetFiles(fontDir, "*.ttf");
-
-                foreach (var file in winfontsList) {
-                    var fontName = Path.GetFileNameWithoutExtension(file).ToLower();
-                    fontFiles.Add(file);
-                }
-
-                foreach (var file in fontFiles) {
-                    RegisterFontFile(file);
-                }
-            }
-            */
+            LoadFonts();
         }
 
-        public bool RegisterFontFile(string filename) {
+        private void LoadFonts() {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            _availableFonts = GetFontFileInfoInReg();
+            //foreach (var r in res) {
+            //    _log.LogWarning($"Font found in registry: {r.Key} {r.Value}");
+            //}
+            sw.Stop();
+            _log.LogWarning($"Loaded {_availableFonts.Count} fonts in {sw.ElapsedMilliseconds} ms");
+
+        }
+        private Dictionary<string, string> GetFontFileInfoInReg() {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
             try {
-                if (!File.Exists(filename)) {
-                    _log?.LogWarning($"Font file does not exist: {filename}");
+                RegistryKey localMachineKey = Registry.LocalMachine;
+                RegistryKey localMachineKeySub = localMachineKey.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts", false);
+
+                string[] mynames = localMachineKeySub.GetValueNames();
+
+                foreach (string name in mynames) {
+                    string myvalue = localMachineKeySub.GetValue(name).ToString();
+
+                    if (myvalue.Substring(myvalue.Length - 4).ToUpper() == ".TTF" && myvalue.Substring(1, 2).ToUpper() != @":") {
+                        string val = name.Substring(0, name.Length - 11);
+                        result[val] = myvalue;
+                    }
                 }
-
-                // TODO: i dunno why these dont work... skip for now
-                var font = TrueTypeFont.FromFile(filename);
-                var fontInfo = new FontInfo(filename, font);
-                if (fontInfo.Family.ToLower().Contains("webdings") || fontInfo.Family.ToLower().Contains("wingdings")) {
-                    return false;
-                }
-
-                if (_availableFonts.ContainsKey(filename)) {
-                    _availableFonts.Remove(filename);
-                }
-
-                _log?.LogTrace($"Registered font: {fontInfo.Family}: {filename}");
-
-                _availableFonts.Add(filename, fontInfo);
+                localMachineKeySub.Close();
             }
             catch (Exception ex) {
-                _log?.LogError($"Error registering font: {filename}: {ex}");
+                _log.LogWarning($"Failed to get fonts from registry: {ex.Message}");
             }
-            return false;
+            return result;
         }
 
-        public bool TryGetFont(string fontName, string fontStyle, [MaybeNullWhen(false)] out FontInfo font) {
+        public bool TryGetFontFile(string fontName, string fontStyle, [MaybeNullWhen(false)] out string fontFile) {
             fontName = fontName.ToLowerInvariant();
             fontStyle = fontStyle.ToLowerInvariant();
 
-            font = _availableFonts.Values.FirstOrDefault(f => f.Family.ToLowerInvariant().Contains(fontName) && f.SubFamily.ToString().ToLowerInvariant().Contains(fontStyle));
+            fontFile = _availableFonts.FirstOrDefault(f => {
+                if (fontStyle == "regular" && f.Key.ToLowerInvariant() == fontName) return true;
+                if (f.Key.ToLowerInvariant().Contains(fontName) && f.Key.ToLowerInvariant().Contains(fontStyle)) return true;
+                return false;
+            }).Value;
 
-            return font != null;
+            if (fontFile != null) {
+                string folderFullName = System.Environment.GetEnvironmentVariable("windir") + "\\fonts\\";
+                fontFile = folderFullName + fontFile;
+            }
+            return fontFile != null;
         }
 
         public void Dispose() {

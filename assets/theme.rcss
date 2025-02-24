@@ -398,7 +398,7 @@ input.radio:checked
 
 input.radio:hover, input.radio:focus-visible
 {
-	decorator: image( radio-25 );
+	decorator: image( radio-25  );
 }
 
 input.radio:active

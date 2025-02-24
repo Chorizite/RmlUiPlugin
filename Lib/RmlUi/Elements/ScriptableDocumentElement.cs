@@ -9,7 +9,6 @@ using Cortex.Net.Core;
 using Lua;
 using Microsoft.Extensions.Logging;
 using RmlUiNet;
-using RoyT.TrueType.Tables.Kern;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
