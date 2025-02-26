@@ -62,7 +62,7 @@ namespace RmlUi.Lib.RmlUi {
                 if (!string.IsNullOrEmpty(parts)) {
                     var splitChar = path.Contains("/") ? '/' : '\\';
                     var pluginName = parts.Split(splitChar).FirstOrDefault();
-                    var plugin = RmlUiPlugin.Instance.PluginManager.GetPlugin<IPluginCore>(pluginName);
+                    var plugin = RmlUiPlugin.Instance.PluginManager.GetPlugin(pluginName);
                     if (plugin != null) {
                         var templatePath = System.IO.Path.Combine(plugin.Manifest.BaseDirectory, string.Join('/', parts.Split(splitChar).Skip(1)));
                         if (File.Exists(templatePath)) {
