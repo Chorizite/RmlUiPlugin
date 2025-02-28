@@ -7,7 +7,7 @@
                 width: 100%;
                 height: 100%;
                 background-color: #00000088;
-                font-family: LatoLatin;
+                font-family: Tahoma;
                 z-index: 9000;
             }
             div {
@@ -30,7 +30,7 @@
         </style>
         <script type="">
             local rx = require('rx')
-            local backend = require('backend')
+            local backend = require('Backend')
             function ModalView()
                 return rx:Div({ class="modal panel" }, {
                     rx:P({ class="message" }, modal.text),

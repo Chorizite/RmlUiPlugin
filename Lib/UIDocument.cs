@@ -102,7 +102,7 @@ namespace RmlUi.Lib {
             add => _OnBeforeRender.Subscribe(value);
             remove => _OnBeforeRender.Unsubscribe(value);
         }
-        private WeakEvent<EventArgs> _OnBeforeRender = new();
+        protected WeakEvent<EventArgs> _OnBeforeRender = new();
 
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace RmlUi.Lib {
             add => _onAfterReload.Subscribe(value);
             remove => _onAfterReload.Unsubscribe(value);
         }
-        private WeakEvent<EventArgs> _onAfterReload = new();
+        protected WeakEvent<EventArgs> _onAfterReload = new();
 
         /// <summary>
         /// Called when the document is hidden
@@ -121,7 +121,7 @@ namespace RmlUi.Lib {
             add => _OnHide.Subscribe(value);
             remove => _OnHide.Unsubscribe(value);
         }
-        private WeakEvent<EventArgs> _OnHide = new();
+        protected WeakEvent<EventArgs> _OnHide = new();
 
         /// <summary>
         /// Called when the document is shown
@@ -130,7 +130,7 @@ namespace RmlUi.Lib {
             add => _OnShow.Subscribe(value);
             remove => _OnShow.Unsubscribe(value);
         }
-        private WeakEvent<EventArgs> _OnShow = new();
+        protected WeakEvent<EventArgs> _OnShow = new();
 
         /// <summary>
         /// Called when the icon of the document changes
@@ -139,7 +139,7 @@ namespace RmlUi.Lib {
             add => _OnIconChanged.Subscribe(value);
             remove => _OnIconChanged.Unsubscribe(value);
         }
-        private WeakEvent<EventArgs> _OnIconChanged = new();
+        protected WeakEvent<EventArgs> _OnIconChanged = new();
 
         internal UIDocument(string name, string filename, Context context, ACSystemInterface rmlSystemInterface, ILogger log, bool isSource = false, Action<UIDocument>? init = null) {
             Name = name;
@@ -156,6 +156,25 @@ namespace RmlUi.Lib {
                 _fileWatcher = new FileWatcher(Path.GetDirectoryName(_docFile), Path.GetFileName(_docFile), (file) => {
                     NeedsReload = true;
                 });
+            }
+
+            OnShow += OnShowInternal;
+            OnHide += OnHideInternal;
+        }
+
+        private void OnHideInternal(object? sender, EventArgs e) {
+            if (_scriptableDoc?.OwnerDocument is not null) {
+                _scriptableDoc?.OwnerDocument.AddClass("hidden");
+                _scriptableDoc?.OwnerDocument.RemoveClass("visible");
+                _log.LogDebug($"Hiding document {Name} {_docFile}");
+            }
+        }
+
+        private void OnShowInternal(object? sender, EventArgs e) {
+            if (_scriptableDoc?.OwnerDocument is not null) {
+                _scriptableDoc?.OwnerDocument.RemoveClass("hidden");
+                _scriptableDoc?.OwnerDocument.AddClass("visible");
+                _log.LogDebug($"Showing document {Name} {_docFile}");
             }
         }
 
@@ -291,6 +310,8 @@ namespace RmlUi.Lib {
         }
 
         public virtual void Dispose() {
+            OnShow -= OnShowInternal;
+            OnHide -= OnHideInternal;
             _fileWatcher?.Dispose();
             UnloadDoc();
         }

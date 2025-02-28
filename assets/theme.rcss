@@ -529,3 +529,94 @@ input[type="text"]:disabled, input[type="password"]:disabled {
 	font-effect: shadow(1px 1px black);
 	color: #999;
 }
+
+
+
+
+
+
+.pulse {
+	animation: pulse-animation .9s infinite;
+}
+
+@keyframes pulse-animation {
+	0% {
+		opacity: 0.3;
+	}
+
+	70% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0.3;
+	}
+}
+
+@keyframes fade-in-animation {
+	0% {
+		opacity: 0.0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes fade-out-animation {
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+progress.horizontal {
+	display: inline-block;
+	animation: loader 1s infinite;
+	height: 30dp;
+	decorator: image( dat://0x06001966 cover left );
+}
+
+progress.horizontal fill {
+	animation: loader-fill 1s infinite;
+	decorator: image( dat://0x0600195C cover left );
+}
+
+@keyframes loader {
+	from { decorator: image( dat://0x06001966 cover left ); }
+	7% { decorator: image( dat://0x06001967 cover left ); }
+	14% { decorator: image( dat://0x06001968 cover left ); }
+	21% { decorator: image( dat://0x06001969 cover left ); }
+	28% { decorator: image( dat://0x0600196A cover left ); }
+	35% { decorator: image( dat://0x0600196B cover left ); }
+	42% { decorator: image( dat://0x0600196C cover left ); }
+	49% { decorator: image( dat://0x0600196D cover left ); }
+	56% { decorator: image( dat://0x0600196E cover left ); }
+	63% { decorator: image( dat://0x0600196F cover left ); }
+	70% { decorator: image( dat://0x06001975 cover left ); }
+	77% { decorator: image( dat://0x06001976 cover left ); }
+	84% { decorator: image( dat://0x06001977 cover left ); }
+	91% { decorator: image( dat://0x06001978 cover left ); }
+	to { decorator: image( dat://0x06001979 cover left ); }
+}
+
+@keyframes loader-fill {
+	from { decorator: image( dat://0x0600195C cover left ); }
+	7% { decorator: image( dat://0x0600195D cover left ); }
+	14% { decorator: image( dat://0x0600195E cover left ); }
+	21% { decorator: image( dat://0x0600195F cover left ); }
+	28% { decorator: image( dat://0x06001960 cover left ); }
+	35% { decorator: image( dat://0x06001961 cover left ); }
+	42% { decorator: image( dat://0x06001962 cover left ); }
+	49% { decorator: image( dat://0x06001963 cover left ); }
+	56% { decorator: image( dat://0x06001964 cover left ); }
+	63% { decorator: image( dat://0x06001965 cover left ); }
+	70% { decorator: image( dat://0x06001971 cover left ); }
+	77% { decorator: image( dat://0x06001972 cover left ); }
+	84% { decorator: image( dat://0x06001973 cover left ); }
+	91% { decorator: image( dat://0x06001974 cover left ); }
+	to { decorator: image( dat://0x06001974 cover left ); }
+}

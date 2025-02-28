@@ -181,10 +181,20 @@ namespace RmlUi.Lib {
             panel.OnShow += Panel_OnShow;
             panel.OnHide += Panel_OnHide;
             panel.OnAfterReload += Panel_OnAfterReload;
+            panel.OnIconChanged += Panel_OnIconChanged;
+            panel.OnShowInBarChanged += Panel_OnShowInBarChanged;
 
             _panels.Add(name, panel);
 
             _OnPanelAdded?.Invoke(this, new PanelAddedEventArgs(panel));
+        }
+
+        private void Panel_OnShowInBarChanged(object? sender, EventArgs e) {
+            _OnPanelVisibilityChanged?.Invoke(this, new PanelVisibilityChangedEventArgs((Panel)sender!, true));
+        }
+
+        private void Panel_OnIconChanged(object? sender, EventArgs e) {
+            _OnPanelVisibilityChanged?.Invoke(this, new PanelVisibilityChangedEventArgs((Panel)sender!, true));
         }
 
         private void Panel_OnHide(object? sender, EventArgs e) {
