@@ -87,10 +87,6 @@ namespace RmlUi {
             Backend = ChoriziteBackend;
             FontManager = new FontManager(Log);
             Lua = lua;
-
-            var rmlUINativePath = Path.Combine(AssemblyDirectory, "runtimes", (IntPtr.Size == 8) ? "win-x64" : "win-x86", "native", "RmlUiNative.dll");
-            Log?.LogTrace($"Manually pre-loading {rmlUINativePath}");
-            Native.LoadLibrary(rmlUINativePath);
         }
 
         protected override void Initialize() {
