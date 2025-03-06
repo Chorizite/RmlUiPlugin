@@ -3,6 +3,7 @@ using Cortex.Net;
 using Cortex.Net.Api;
 using Cortex.Net.Core;
 using Cortex.Net.Types;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace RmlUi.Lib.RmlUi.Elements {
         public string Name { get; }
 
         private Dictionary<string, MyObservable> _children = [];
+        private Dictionary<string, Type> _childTypes = []; // <name, type>
         internal ObservableObject Observable;
 
         public event EventHandler<ObjectCancellableEventArgs> OnChange {
@@ -58,6 +60,8 @@ namespace RmlUi.Lib.RmlUi.Elements {
                 _orderedKeys.Add(name);
             }
 
+            _childTypes.Add(name, typeof(T));
+
             if (value is MyObservable myObservable) {
                 _observables.Remove(myObservable.Observable);
                 _observables.Add(myObservable.Observable, myObservable);
@@ -69,6 +73,7 @@ namespace RmlUi.Lib.RmlUi.Elements {
         }
 
         public void ClearProperty(string name) {
+            _childTypes.Remove(name);
             Length--;
             _orderedKeys.Remove(name);
             Observable.Remove(name);
@@ -78,6 +83,7 @@ namespace RmlUi.Lib.RmlUi.Elements {
         public void AddObservableString(string name, string value) => AddObservableProperty(name, value);
         public void AddObservableBool(string name, bool value) => AddObservableProperty(name, value);
         public void AddObservableNumber(string name, double value) => AddObservableProperty(name, value);
+        public void AddObservableUserData(string name, object value) => AddObservableProperty(name, value);
 
         public string ReadString(string name) => Read(name, "");
         public void WriteString(string name, string value) => Write(name, value);
@@ -88,28 +94,52 @@ namespace RmlUi.Lib.RmlUi.Elements {
         public double ReadNumber(string name) => Read(name, (double)0);
         public void WriteNumber(string name, double value) => Write(name, value);
 
+        public object ReadUserData(string name) => Read<object>(name, null);
+        public void WriteUserData(string name, object value) => Write(name, value);
+
         internal T Read<T>(string name, T defaultValue = default) {
-            if (!Observable.Has(name)) {
-                Observable.AddObservableProperty(name, defaultValue);
+            try {
+                if (!Observable.Has(name)) {
+                    Observable.AddObservableProperty(name, defaultValue);
+                }
+
+                return Observable.Read<T>(name);
             }
-            return Observable.Read<T>(name);
+            catch (Exception ex) {
+                RmlUiPlugin.Log.LogError(ex, ex.Message);
+                return defaultValue;
+            }
         }
 
         internal void Write<T>(string name, T value) {
-            if (!_orderedKeys.Contains(name)) {
-                _orderedKeys.Add(name);
+            try {
+                if (_childTypes.TryGetValue(name, out var type) && type != typeof(T)) {
+                    ClearProperty(name);
+                }
+
+                if (!_orderedKeys.Contains(name)) {
+                    _orderedKeys.Add(name);
+                }
+                if (!Observable.Has(name)) {
+                    Observable.AddObservableProperty(name, default(T));
+                }
+                Observable.Write(name, value);
             }
-            if (!Observable.Has(name)) {
-                Observable.AddObservableProperty(name, default(T));
+            catch (Exception ex) {
+                RmlUiPlugin.Log.LogError(ex, ex.Message);
             }
-            Observable.Write(name, value);
         }
 
         public MyObservable? ReadObservable(string name) {
-            if (Observable.Has(name)) {
-                if (_observables.TryGetValue(Observable.Read<ObservableObject>(name), out var observable)) {
-                    return observable;
+            try {
+                if (Observable.Has(name)) {
+                    if (_observables.TryGetValue(Observable.Read<ObservableObject>(name), out var observable)) {
+                        return observable;
+                    }
                 }
+            }
+            catch (Exception ex) {
+                RmlUiPlugin.Log.LogError(ex, ex.Message);
             }
             return null;
         }
