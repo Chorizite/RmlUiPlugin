@@ -1,10 +1,11 @@
 {
+  "id": "RmlUi",
   "name": "RmlUi",
+  "description": "Adds rmlui interfaces with html/css/lua scripting",
+  "version": "0.0.0-dev",
   "entryfile": "RmlUi.dll",
   "author": "Chorizite",
   "icon": "icon.png",
-  "version": "0.0.0-dev",
-  "description": "Adds rmlui interfaces with html/css/lua scripting",
-  "dependencies": [ "Lua@0.0.7" ],
+  "dependencies": [ "Lua@0.0.13" ],
   "environments": [ "Launcher", "Client" ]
 }
