@@ -66,6 +66,8 @@ function make_reactive(original_value, name, parent, seen)
         value = observable:ReadString(key)
       elseif (observable_types[key] == "number") then
         value = observable:ReadNumber(key)
+      elseif (observable_types[key] == "userdata") then
+        value = observable:ReadUserData(key)
       elseif (observable_types[key] == "boolean") then
         value = observable:ReadBool(key)
       else
@@ -82,6 +84,9 @@ function make_reactive(original_value, name, parent, seen)
       elseif type(value) == "string" then
         observable_types[key] = type(value)
         observable:WriteString(key, value)
+      elseif type(value) == "userdata" then
+        observable_types[key] = type(value)
+        observable:WriteUserData(key, value)
       elseif type(value) == "number" then
         observable_types[key] = type(value)
         observable:WriteNumber(key, value)
@@ -116,6 +121,9 @@ function make_reactive(original_value, name, parent, seen)
         observable_types[k] = type(v)
       elseif type(v) == "number" then
         observable:AddObservableNumber(k, v)
+        observable_types[k] = type(v)
+      elseif type(v) == "userdata" then
+        observable:AddObservableUserData(k, v)
         observable_types[k] = type(v)
       elseif type(v) == "boolean" then
         observable:AddObservableBool(k, v)
